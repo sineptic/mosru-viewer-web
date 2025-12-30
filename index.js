@@ -1,21 +1,37 @@
 import { render } from "./libs/preact/";
 import { html } from "./libs/htm";
-import { useState } from "./libs/preact-hooks/";
+import { useEffect, useState } from "./libs/preact-hooks/";
 
-function Counter() {
-  let [value, setValue] = useState(0);
+const headers = new Headers();
+headers.append("Authorization", `Bearer ${MOSRU_BEARER}`);
+headers.append("x-mes-subsystem", "familyweb");
 
-  return html`
-    <button onClick=${() => setValue(value + 1)}>value is ${value}</button>
-  `;
+function Marks() {
+    console.log("rendering marks");
+    let [marks, setMarks] = useState({ payload: [] });
+    useEffect(async () => {
+        let response = await fetch(
+            "https://school.mos.ru/api/family/web/v1/subject_marks?student_id=31823383",
+            {
+                headers: headers,
+            },
+        );
+        if (!response.ok) return;
+        let value = await response.json();
+        setMarks(value);
+    }, []);
+    return html`
+        <ul>
+            ${marks.payload.map(
+                (subject_marks) =>
+                    html`<li>subject: ${subject_marks.subject_name}</li>`,
+            )}
+        </ul>
+    `;
 }
 
 function App() {
-  return html`
-    <h1>Hello World</h1>
-    <p>What you are doing?</p>
-    <${Counter} />
-  `;
+    return html`<${Marks} />`;
 }
 
 render(html`<${App} />`, document.body);
