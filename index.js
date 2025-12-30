@@ -1,4 +1,4 @@
-import { render } from "preact";
+import { render } from "/preact";
 import { html } from "htm/preact";
 
 function App() {
