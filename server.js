@@ -6,6 +6,12 @@ Bun.serve({
       return new Response(html, {
         headers: { 'Content-Type': 'text/html' }
       });
+    },
+    "/index.js": async () => {
+      const js = await Bun.file('./index.js').text();
+      return new Response(js, {
+        headers: { 'Content-Type': 'application/javascript' }
+      });
     }
   }
 });
