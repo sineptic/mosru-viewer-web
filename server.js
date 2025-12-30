@@ -21,6 +21,10 @@ Bun.serve({
   routes: {
     "/": async () => serveFile("index.html"),
     "/index.js": async () => serveFile("./index.js"),
+
+    "/libs/htm/import.js": async () => serveFile("./libs/htm/import.js"),
+    "/libs/htm/index.js": async () => serveFile("./libs/htm/index.js"),
+
     "/libs/preact/index.js": async () => serveFile("./libs/preact/index.js"),
     "/libs/preact/render": async () => serveFile("./libs/preact/render.js"),
     "/libs/preact/create-element": async () =>

@@ -1,12 +1,11 @@
-import { render, createElement } from "/libs/preact/index.js";
-// import { html } from "htm/preact";
+import { render } from "/libs/preact/index.js";
+import { html } from "/libs/htm/import.js";
 
 function App() {
-  return createElement("p", {}, "Hello");
-  // return html`
-  //   <h1>Hello World</h1>
-  //   <p>What you are doing?</p>
-  // `;
+  return html`
+    <h1>Hello World</h1>
+    <p>What you are doing?</p>
+  `;
 }
 
 render(App(), document.body);
