@@ -21,6 +21,28 @@ Bun.serve({
   routes: {
     "/": async () => serveFile("index.html"),
     "/index.js": async () => serveFile("./index.js"),
+    "/libs/preact/index.js": async () => serveFile("./libs/preact/index.js"),
+    "/libs/preact/render": async () => serveFile("./libs/preact/render.js"),
+    "/libs/preact/create-element": async () =>
+      serveFile("./libs/preact/create-element.js"),
+    "/libs/preact/component": async () =>
+      serveFile("./libs/preact/component.js"),
+    "/libs/preact/clone-element": async () =>
+      serveFile("./libs/preact/clone-element.js"),
+    "/libs/preact/diff/children": async () =>
+      serveFile("./libs/preact/diff/children.js"),
+    "/libs/preact/create-context": async () =>
+      serveFile("./libs/preact/create-context.js"),
+    "/libs/preact/options": async () => serveFile("./libs/preact/options.js"),
+    "/libs/preact/constants": async () =>
+      serveFile("./libs/preact/constants.js"),
+    "/libs/preact/diff/index": async () =>
+      serveFile("./libs/preact/diff/index.js"),
+    "/libs/preact/util": async () => serveFile("./libs/preact/util.js"),
+    "/libs/preact/diff/catch-error": async () =>
+      serveFile("./libs/preact/diff/catch-error.js"),
+    "/libs/preact/diff/props": async () =>
+      serveFile("./libs/preact/diff/props.js"),
   },
 });
 
