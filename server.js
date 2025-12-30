@@ -22,9 +22,18 @@ Bun.serve({
     "/": async () => serveFile("index.html"),
     "/index.js": async () => serveFile("./index.js"),
 
+    "/libs/htm": Response.redirect("/libs/htm/import.js", 307),
     "/libs/htm/import.js": async () => serveFile("./libs/htm/import.js"),
     "/libs/htm/index.js": async () => serveFile("./libs/htm/index.js"),
 
+    "/libs/preact-hooks/": Response.redirect(
+      "/libs/preact-hooks/index.js",
+      307,
+    ),
+    "/libs/preact-hooks/index.js": async () =>
+      serveFile("./libs/preact-hooks/index.js"),
+
+    "/libs/preact/": Response.redirect("/libs/preact/index.js", 307),
     "/libs/preact/index.js": async () => serveFile("./libs/preact/index.js"),
     "/libs/preact/render": async () => serveFile("./libs/preact/render.js"),
     "/libs/preact/create-element": async () =>
