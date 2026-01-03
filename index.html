@@ -7,6 +7,21 @@
 		<script type="module" src="./index.js"></script>
 		<!-- FIXME -->
 		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+		<style>
+			::view-transition-group(*) {
+				animation-duration: 1s;
+				animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+			}
+			html:active-view-transition-type(loading-homework)::view-transition-group(*) {
+				animation-duration: 0.1s;
+			}
+			html:active-view-transition-type(filtering-homework)::view-transition-old(*) {
+				animation-duration: 0.2s;
+			}
+			html:active-view-transition-type(filtering-homework)::view-transition-group(*) {
+				animation-duration: 0.4s;
+			}
+		</style>
 	</head>
 	<body>
 	</body>

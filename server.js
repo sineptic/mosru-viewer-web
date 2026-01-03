@@ -20,8 +20,9 @@ Bun.serve({
   port: 3000,
   routes: {
     "/": async () => serveFile("index.html"),
-    "/index.js": async () => {
-      let content = await Bun.file("./index.js").text();
+    "/index.js": async () => serveFile("./index.js"),
+    "/networking.js": async () => {
+      let content = await Bun.file("./networking.js").text();
       const secrets = await Bun.file("./secrets.json").json();
       return new Response(
         content.replaceAll("${MOSRU_BEARER}", secrets.MOSRU_BEARER),
@@ -30,6 +31,8 @@ Bun.serve({
         },
       );
     },
+    "/marks.js": async () => serveFile("./marks.js"),
+    "/homework.js": async () => serveFile("./homework.js"),
 
     "/libs/htm": Response.redirect("/libs/htm/import.js", 307),
     "/libs/htm/import.js": async () => serveFile("./libs/htm/import.js"),
