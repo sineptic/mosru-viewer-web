@@ -2,7 +2,7 @@ import { render } from "./libs/preact/";
 import { html } from "./libs/htm";
 import { useState } from "./libs/preact-hooks/";
 import Marks from "./marks.js";
-import CurrentHomeworks from "./homework.js";
+import CurrentHomework from "./homework.js";
 
 function App() {
   const [screen, setScreen] = useState("marks");
@@ -34,7 +34,7 @@ function App() {
           <${Marks} />
         </div>
         <div class=${screen === "homework" ? "" : "hidden"}>
-          <${CurrentHomeworks} />
+          <${CurrentHomework} />
         </div>
       </main>
     </div>

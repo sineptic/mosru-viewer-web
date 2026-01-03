@@ -43,7 +43,7 @@ function HomeworkMaterial({ hw, material }) {
   </button>`;
 }
 
-function Homework({ hw }) {
+function HomeworkTile({ hw }) {
   const transitionId = `hw-${hw.homework_id}`;
   let title = `created: ${hw.homework_created_at}`;
   if (hw.homework_created_at !== hw.homework_updated_at) {
@@ -69,7 +69,7 @@ function Homework({ hw }) {
   </div>`;
 }
 
-function Homeworks({ items, order }) {
+function HomeworkGroup({ items, order }) {
   let grouped = Array.from(Map.groupBy(items, (item) => item.date).values());
   switch (order) {
     case "asc":
@@ -95,7 +95,7 @@ function Homeworks({ items, order }) {
         <h5 style="view-transition-name: ${groupId}" class="font-bold">
           ${formattedDate}
         </h5>
-        ${byDay.map((item) => html`<${Homework} hw=${item} />`)}
+        ${byDay.map((item) => html`<${HomeworkTile} hw=${item} />`)}
       </div>`;
     })}
   </div>`;
@@ -105,8 +105,8 @@ function formatDate(date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
-export default function CurrentHomeworks() {
-  let [homeworks, setHomeworks] = useState([]);
+export default function CurrentHomework() {
+  let [homework, setHomework] = useState([]);
   useEffect(async () => {
     let res = await fetch(
       "https://school.mos.ru/api/family/web/v1/homeworks?from=2025-09-01&to=2025-12-07&student_id=31823383",
@@ -115,13 +115,13 @@ export default function CurrentHomeworks() {
       },
     );
     if (!res.ok) {
-      console.error("can't fetch homeworks.", res.body);
+      console.error("can't fetch homework.", res.body);
       return;
     }
     let value = await res.json();
     console.log(value);
     viewTransitionHelper("loading-homework", () => {
-      setHomeworks(value.payload);
+      setHomework(value.payload);
     });
   }, []);
 
@@ -144,7 +144,7 @@ export default function CurrentHomeworks() {
       setSubject(e.target.value);
     });
   };
-  const filtered = homeworks.filter((hw) => {
+  const filtered = homework.filter((hw) => {
     if (selectedSubject === "none") return true;
     return hw.subject_name === selectedSubject;
   });
@@ -153,7 +153,7 @@ export default function CurrentHomeworks() {
   const previous = filtered.filter((hw) => new Date(hw.date) < today);
 
   const subjectNames = Array.from(
-    new Set(homeworks.map((hw) => hw.subject_name)),
+    new Set(homework.map((hw) => hw.subject_name)),
   ).toSorted();
 
   // NOTE: z index needed because elements with view transition name are on top by default
@@ -165,7 +165,7 @@ export default function CurrentHomeworks() {
     </select>
     </div>
     <div>
-      <${Homeworks}
+      <${HomeworkGroup}
         items=${upcoming}
         order="desc"
       />
@@ -175,17 +175,9 @@ export default function CurrentHomeworks() {
         <hr class="border-red-500 w-full border-1"></hr>
         СЕЙЧАС
       </div>
-      <${Homeworks}
+      <${HomeworkGroup}
         items=${previous}
         order="desc"
       />
     </div>`;
 }
-
-// function App() {
-//   return html`<div class="p-2 w-full h-full bg-[rgb(244,244,248)]">
-//     <${CurrentHomeworks} />
-//   </div>`;
-// }
-
-// render(html`<${App} />`, document.body);
