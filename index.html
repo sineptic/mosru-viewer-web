@@ -10,16 +10,22 @@
 		<style>
 			::view-transition-group(*) {
 				animation-duration: 1s;
-				animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+				animation-timing-function: cubic-bezier(0,1,.83,.67);
 			}
 			html:active-view-transition-type(loading-homework)::view-transition-group(*) {
 				animation-duration: 0.1s;
 			}
+			html:active-view-transition-type(loading-marks)::view-transition-group(*) {
+				animation-duration: 0.1s;
+			}
 			html:active-view-transition-type(filtering-homework)::view-transition-old(*) {
-				animation-duration: 0.2s;
+				animation-duration: 0.1s;
 			}
 			html:active-view-transition-type(filtering-homework)::view-transition-group(*) {
-				animation-duration: 0.4s;
+				animation-duration: 0.2s;
+			}
+			body {
+				background-color: #f4f4f8;
 			}
 		</style>
 	</head>

@@ -1,13 +1,13 @@
 import { html } from "./libs/htm";
 import { useState, useEffect } from "./libs/preact-hooks/";
-import { headers } from "./networking.js";
+import { apiHeaders, viewTransitionHelper } from "./utils.js";
 
 function HomeworkMaterial({ hw, material }) {
   const navigateToMESHLibrary = async () => {
     let res = await fetch(
       `https://school.mos.ru/api/ej/partners/v1/homeworks/launch?homework_entry_id=${hw.homework_entry_id}&material_id=${material.uuid}`,
       {
-        headers: headers,
+        headers: apiHeaders,
       },
     );
     // NOTE: it answers with not ok somewhy
@@ -39,7 +39,7 @@ function HomeworkMaterial({ hw, material }) {
     class="bg-blue-200 my-1 p-1 rounded-md hover:bg-blue-300"
     onClick=${handleClick}
   >
-    ${material.action_name}: <span>${material.title}</span>
+    ${material.action_name}: ${material.title}
   </button>`;
 }
 
@@ -51,9 +51,12 @@ function HomeworkTile({ hw }) {
   }
   return html`<div
     style="view-transition-name: ${transitionId}"
-    class="bg-white px-4 py-3 rounded-2xl flex flex-row gap-4"
+    class="bg-white px-4 py-3 rounded-2xl flex flex-row"
   >
     <div class="mt-3 font-semibold w-[180px]">${hw.subject_name}</div>
+    <div
+      class="bg-transparent w-4 min-w-0 flex-shrink transition-all duration-200"
+    ></div>
     <div
       class="hover:bg-[rgb(244,244,248)] rounded-2xl pl-3 pr-2 py-4 w-full flex flex-col items-start"
       title="${title}"
@@ -109,9 +112,9 @@ export default function CurrentHomework() {
   let [homework, setHomework] = useState([]);
   useEffect(async () => {
     let res = await fetch(
-      "https://school.mos.ru/api/family/web/v1/homeworks?from=2025-09-01&to=2025-12-07&student_id=31823383",
+      "https://school.mos.ru/api/family/web/v1/homeworks?from=2025-09-01&to=2026-05-30&student_id=31823383",
       {
-        headers: headers,
+        headers: apiHeaders,
       },
     );
     if (!res.ok) {
@@ -125,18 +128,7 @@ export default function CurrentHomework() {
     });
   }, []);
 
-  const today = new Date("2025-11-30");
-
-  function viewTransitionHelper(name, callback) {
-    if (!document.startViewTransition) {
-      callback();
-      return;
-    }
-    let tr = document.startViewTransition(() => {
-      callback();
-    });
-    tr.types.add(name);
-  }
+  const today = new Date();
 
   const [selectedSubject, setSubject] = useState("none");
   const handleSubjectChange = (e) => {
@@ -158,8 +150,8 @@ export default function CurrentHomework() {
 
   // NOTE: z index needed because elements with view transition name are on top by default
   return html`
-    <div style="view-transition-name: filtering-topbar" class="sticky top-0 left-0 w-full bg-green-500 z-10">
-    <select value=${selectedSubject} onChange=${handleSubjectChange}>
+    <div style="view-transition-name: filtering-topbar" class="sticky top-0 left-0 bg-green-500 z-10">
+    <select id="homework-filtering-select" value=${selectedSubject} onChange=${handleSubjectChange}>
       <option value="none">без фильтра</option>
       ${subjectNames.map((name) => html`<option value=${name}>${name}</option>`)}
     </select>
@@ -171,7 +163,7 @@ export default function CurrentHomework() {
       />
       <div
       style="view-transition-name: horizontal-line"
-      class="my-6 flex flex-col gap-0.5 items-center font-mono text-red-600">
+      class="my-6 flex flex-col gap-0.5 items-center font-mono text-red-600 w-full">
         <hr class="border-red-500 w-full border-1"></hr>
         СЕЙЧАС
       </div>

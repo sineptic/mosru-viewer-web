@@ -21,8 +21,8 @@ Bun.serve({
   routes: {
     "/": async () => serveFile("index.html"),
     "/index.js": async () => serveFile("./index.js"),
-    "/networking.js": async () => {
-      let content = await Bun.file("./networking.js").text();
+    "/utils.js": async () => {
+      let content = await Bun.file("./utils.js").text();
       const secrets = await Bun.file("./secrets.json").json();
       return new Response(
         content.replaceAll("${MOSRU_BEARER}", secrets.MOSRU_BEARER),

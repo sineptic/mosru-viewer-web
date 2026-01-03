@@ -5,13 +5,13 @@ import Marks from "./marks.js";
 import CurrentHomework from "./homework.js";
 
 function App() {
-  const [screen, setScreen] = useState("marks");
+  const [screen, setScreen] = useState("homework");
   const screens = [
     ["marks", "Оценки"],
     ["homework", "Домашние Задания"],
   ];
-  return html`<div class="w-full h-full p-1 bg-[#f4f4f8]">
-    <div class="flex flex-row gap-6 justify-center">
+  return html`<div class="w-full h-full p-1">
+    <div class="flex flex-row justify-center">
       <div class="flex flex-col gap-1">
         ${screens.map(
           (scr) => html`
@@ -29,7 +29,8 @@ function App() {
           `,
         )}
       </div>
-      <main class="max-w-[1000px]">
+      <div class="w-6 min-w-0 flex-shrink"></div>
+      <main class="w-full max-w-[1000px]">
         <div class=${screen === "marks" ? "" : "hidden"}>
           <${Marks} />
         </div>

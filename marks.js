@@ -1,6 +1,6 @@
 import { html } from "./libs/htm";
 import { useEffect, useState } from "./libs/preact-hooks/";
-import { headers } from "./networking.js";
+import { apiHeaders, viewTransitionHelper } from "./utils.js";
 
 export function Mark({ id, value, weight, control_form_name, comment, date }) {
   return html`
@@ -44,13 +44,15 @@ export default function Marks() {
     let response = await fetch(
       "https://school.mos.ru/api/family/web/v1/subject_marks?student_id=31823383",
       {
-        headers: headers,
+        headers: apiHeaders,
       },
     );
     if (!response.ok) return;
     let value = await response.json();
     console.log("marks: ", value);
-    setMarks(value);
+    viewTransitionHelper("loading-marks", () => {
+      setMarks(value);
+    });
   }, []);
   return html`
     <div class="flex flex-col items-center gap-3">
@@ -58,10 +60,10 @@ export default function Marks() {
         .filter((x) => x.periods[0])
         .map((subject_marks) => {
           return html`<div
-            class="flex flex-col px-6 bg-white py-5 rounded-2xl gap-5 w-full max-w-[1000px]"
+            class="flex flex-col px-6 bg-white py-5 rounded-2xl gap-5 w-full"
           >
-            <div class="flex justify-between w-full">
-              <div class="text-size-15 w-full">
+            <div class="flex justify-between flex-wrap">
+              <div class="text-size-15 text-wrap">
                 ${subject_marks.subject_name}
               </div>
               <div
