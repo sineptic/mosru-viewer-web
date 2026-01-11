@@ -1,6 +1,6 @@
-import { render } from "./libs/preact/";
-import { html } from "./libs/htm";
-import { useEffect, useState } from "./libs/preact-hooks/";
+import { render } from "preact";
+import { html } from "htm";
+import { useEffect, useState } from "preact-hooks";
 import Marks from "./marks.js";
 import CurrentHomework from "./homework.js";
 

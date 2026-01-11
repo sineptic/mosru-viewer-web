@@ -1,5 +1,5 @@
-import { html } from "./libs/htm";
-import { useState, useEffect } from "./libs/preact-hooks/";
+import { html } from "htm";
+import { useState, useEffect } from "preact-hooks";
 import { apiHeaders, viewTransitionHelper } from "./utils.js";
 
 function HomeworkMaterial({ hw, material, token }) {

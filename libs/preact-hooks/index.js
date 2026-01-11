@@ -1,5 +1,5 @@
-import { options as _options } from "/libs/preact/index.js";
-import { COMPONENT_FORCE } from "/libs/preact/constants";
+import { options as _options } from "preact";
+import { COMPONENT_FORCE } from "preact/constants";
 
 const ObjectIs = Object.is;
 

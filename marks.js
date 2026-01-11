@@ -1,5 +1,5 @@
-import { html } from "./libs/htm";
-import { useEffect, useState } from "./libs/preact-hooks/";
+import { html } from "htm";
+import { useEffect, useState } from "preact-hooks";
 import { apiHeaders, viewTransitionHelper } from "./utils.js";
 
 export function Mark({ id, value, weight, control_form_name, comment, date }) {
