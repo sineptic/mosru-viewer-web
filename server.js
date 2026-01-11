@@ -21,16 +21,7 @@ Bun.serve({
   routes: {
     "/": async () => serveFile("index.html"),
     "/index.js": async () => serveFile("./index.js"),
-    "/utils.js": async () => {
-      let content = await Bun.file("./utils.js").text();
-      const secrets = await Bun.file("./secrets.json").json();
-      return new Response(
-        content, // .replaceAll("MOSRU_BEARER", secrets.MOSRU_BEARER),
-        {
-          headers: { "Content-Type": "application/javascript" },
-        },
-      );
-    },
+    "/utils.js": async () => serveFile("./utils.js"),
     "/marks.js": async () => serveFile("./marks.js"),
     "/homework.js": async () => serveFile("./homework.js"),
 

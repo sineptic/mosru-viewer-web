@@ -76,7 +76,7 @@ function HomeworkTile({ hw, token }) {
   </div>`;
 }
 
-function HomeworkGroup({ items, order }) {
+function HomeworkGroup({ items, order, token }) {
   let grouped = Array.from(Map.groupBy(items, (item) => item.date).values());
   switch (order) {
     case "asc":

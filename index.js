@@ -4,12 +4,35 @@ import { useState } from "./libs/preact-hooks/";
 import Marks from "./marks.js";
 import CurrentHomework from "./homework.js";
 
+function GiveMeToken({ setToken }) {
+  const [tmpToken, setTmpToken] = useState("");
+  const handleChange = (event) => {
+    console.log("hi");
+    setTmpToken(event.target.value);
+    event.preventDefault();
+  };
+  return html`
+    <div class="flex flex-col items-start">
+      <p>set token pls</p>
+      <input type="text" value=${tmpToken} onInput=${handleChange} class="border-2 rounded-sm p-1"></input>
+      <button class="border-green-600 bg-green-500 hover:border-green-700 border-2 rounded-sm p-1 m-1 overflow-hidden" onClick=${() => {
+        if (tmpToken) {
+          setToken(tmpToken);
+        }
+      }}>I finish!</button>
+    </div>
+  `;
+}
+
 function App() {
   const [screen, setScreen] = useState("homework");
   const [token, setToken] = useState(null);
   const invalidateToken = () => {
     setToken(null);
   };
+  if (token === null) {
+    return html`<${GiveMeToken} setToken=${setToken} />`;
+  }
   const screens = [
     ["marks", "Оценки"],
     ["homework", "Домашние Задания"],
