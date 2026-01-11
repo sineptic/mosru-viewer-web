@@ -1,0 +1,17 @@
+name: deploy webapp
+on: push
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pages: write
+    steps:
+      - uses: actions/checkout@v6.0.0
+      - name: move files
+        run: mkdir _site && cp -r libs _site/libs && cp homework.js _site && cp index.html _site && cp index.js _site && cp marks.js _site && cp utils.js _site && ls _site
+      - name: upload artifacts
+        uses: actions/upload-pages-artifact@v4.0.0
+      - name: deploy
+        uses: actions/deploy-pages@v4.0.5
