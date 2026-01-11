@@ -1,4 +1,4 @@
-import { EMPTY_ARR } from './constants';
+import { EMPTY_ARR } from "./constants.js";
 
 export const isArray = Array.isArray;
 export const slice = EMPTY_ARR.slice;
@@ -9,5 +9,5 @@ export const assign = Object.assign;
  * @param {import('./internal').PreactElement | null} node The node to remove
  */
 export function removeNode(node) {
-	if (node && node.parentNode) node.remove();
+  if (node && node.parentNode) node.remove();
 }

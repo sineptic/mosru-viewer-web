@@ -1,13 +1,13 @@
-import { assign } from './util';
-import { diff, commitRoot } from './diff/index';
-import options from './options';
-import { Fragment } from './create-element';
+import { assign } from "./util.js";
+import { diff, commitRoot } from "./diff/index.js";
+import options from "./options.js";
+import { Fragment } from "./create-element.js";
 import {
-	COMPONENT_FORCE,
-	COMPONENT_DIRTY,
-	MODE_HYDRATE,
-	NULL
-} from './constants';
+  COMPONENT_FORCE,
+  COMPONENT_DIRTY,
+  MODE_HYDRATE,
+  NULL,
+} from "./constants.js";
 
 /**
  * Base Component class. Provides `setState()` and `forceUpdate()`, which
@@ -17,9 +17,9 @@ import {
  * getChildContext
  */
 export function BaseComponent(props, context) {
-	this.props = props;
-	this.context = context;
-	this._bits = 0;
+  this.props = props;
+  this.context = context;
+  this._bits = 0;
 }
 
 /**
@@ -32,32 +32,32 @@ export function BaseComponent(props, context) {
  * updated
  */
 BaseComponent.prototype.setState = function (update, callback) {
-	// only clone state when copying to nextState the first time.
-	let s;
-	if (this._nextState != NULL && this._nextState != this.state) {
-		s = this._nextState;
-	} else {
-		s = this._nextState = assign({}, this.state);
-	}
+  // only clone state when copying to nextState the first time.
+  let s;
+  if (this._nextState != NULL && this._nextState != this.state) {
+    s = this._nextState;
+  } else {
+    s = this._nextState = assign({}, this.state);
+  }
 
-	if (typeof update == 'function') {
-		// Some libraries like `immer` mark the current state as readonly,
-		// preventing us from mutating it, so we need to clone it. See #2716
-		update = update(assign({}, s), this.props);
-	}
+  if (typeof update == "function") {
+    // Some libraries like `immer` mark the current state as readonly,
+    // preventing us from mutating it, so we need to clone it. See #2716
+    update = update(assign({}, s), this.props);
+  }
 
-	if (update) {
-		assign(s, update);
-	} else {
-		return;
-	}
+  if (update) {
+    assign(s, update);
+  } else {
+    return;
+  }
 
-	if (this._vnode) {
-		if (callback) {
-			this._stateCallbacks.push(callback);
-		}
-		enqueueRender(this);
-	}
+  if (this._vnode) {
+    if (callback) {
+      this._stateCallbacks.push(callback);
+    }
+    enqueueRender(this);
+  }
 };
 
 /**
@@ -67,14 +67,14 @@ BaseComponent.prototype.setState = function (update, callback) {
  * re-rendered
  */
 BaseComponent.prototype.forceUpdate = function (callback) {
-	if (this._vnode) {
-		// Set render mode so that we can differentiate where the render request
-		// is coming from. We need this because forceUpdate should never call
-		// shouldComponentUpdate
-		this._bits |= COMPONENT_FORCE;
-		if (callback) this._renderCallbacks.push(callback);
-		enqueueRender(this);
-	}
+  if (this._vnode) {
+    // Set render mode so that we can differentiate where the render request
+    // is coming from. We need this because forceUpdate should never call
+    // shouldComponentUpdate
+    this._bits |= COMPONENT_FORCE;
+    if (callback) this._renderCallbacks.push(callback);
+    enqueueRender(this);
+  }
 };
 
 /**
@@ -94,31 +94,31 @@ BaseComponent.prototype.render = Fragment;
  * @param {number | null} [childIndex]
  */
 export function getDomSibling(vnode, childIndex) {
-	if (childIndex == NULL) {
-		// Use childIndex==null as a signal to resume the search from the vnode's sibling
-		return vnode._parent
-			? getDomSibling(vnode._parent, vnode._index + 1)
-			: NULL;
-	}
+  if (childIndex == NULL) {
+    // Use childIndex==null as a signal to resume the search from the vnode's sibling
+    return vnode._parent
+      ? getDomSibling(vnode._parent, vnode._index + 1)
+      : NULL;
+  }
 
-	let sibling;
-	for (; childIndex < vnode._children.length; childIndex++) {
-		sibling = vnode._children[childIndex];
+  let sibling;
+  for (; childIndex < vnode._children.length; childIndex++) {
+    sibling = vnode._children[childIndex];
 
-		if (sibling != NULL && sibling._dom != NULL) {
-			// Since updateParentDomPointers keeps _dom pointer correct,
-			// we can rely on _dom to tell us if this subtree contains a
-			// rendered DOM node, and what the first rendered DOM node is
-			return sibling._dom;
-		}
-	}
+    if (sibling != NULL && sibling._dom != NULL) {
+      // Since updateParentDomPointers keeps _dom pointer correct,
+      // we can rely on _dom to tell us if this subtree contains a
+      // rendered DOM node, and what the first rendered DOM node is
+      return sibling._dom;
+    }
+  }
 
-	// If we get here, we have not found a DOM node in this vnode's children.
-	// We must resume from this vnode's sibling (in it's parent _children array)
-	// Only climb up and search the parent if we aren't searching through a DOM
-	// VNode (meaning we reached the DOM parent of the original vnode that began
-	// the search)
-	return typeof vnode.type == 'function' ? getDomSibling(vnode) : NULL;
+  // If we get here, we have not found a DOM node in this vnode's children.
+  // We must resume from this vnode's sibling (in it's parent _children array)
+  // Only climb up and search the parent if we aren't searching through a DOM
+  // VNode (meaning we reached the DOM parent of the original vnode that began
+  // the search)
+  return typeof vnode.type == "function" ? getDomSibling(vnode) : NULL;
 }
 
 /**
@@ -126,58 +126,58 @@ export function getDomSibling(vnode, childIndex) {
  * @param {import('./internal').Component} component The component to rerender
  */
 function renderComponent(component) {
-	let oldVNode = component._vnode,
-		oldDom = oldVNode._dom,
-		commitQueue = [],
-		refQueue = [];
+  let oldVNode = component._vnode,
+    oldDom = oldVNode._dom,
+    commitQueue = [],
+    refQueue = [];
 
-	const parentDom = component._parentDom;
-	if (parentDom) {
-		const newVNode = assign({}, oldVNode);
-		newVNode._original = oldVNode._original + 1;
-		if (options.vnode) options.vnode(newVNode);
+  const parentDom = component._parentDom;
+  if (parentDom) {
+    const newVNode = assign({}, oldVNode);
+    newVNode._original = oldVNode._original + 1;
+    if (options.vnode) options.vnode(newVNode);
 
-		diff(
-			parentDom,
-			newVNode,
-			oldVNode,
-			component._globalContext,
-			parentDom.namespaceURI,
-			oldVNode._flags & MODE_HYDRATE ? [oldDom] : NULL,
-			commitQueue,
-			oldDom == NULL ? getDomSibling(oldVNode) : oldDom,
-			!!(oldVNode._flags & MODE_HYDRATE),
-			refQueue,
-			parentDom.ownerDocument
-		);
+    diff(
+      parentDom,
+      newVNode,
+      oldVNode,
+      component._globalContext,
+      parentDom.namespaceURI,
+      oldVNode._flags & MODE_HYDRATE ? [oldDom] : NULL,
+      commitQueue,
+      oldDom == NULL ? getDomSibling(oldVNode) : oldDom,
+      !!(oldVNode._flags & MODE_HYDRATE),
+      refQueue,
+      parentDom.ownerDocument,
+    );
 
-		newVNode._original = oldVNode._original;
-		newVNode._parent._children[newVNode._index] = newVNode;
-		commitRoot(commitQueue, newVNode, refQueue);
-		oldVNode._parent = oldVNode._dom = NULL;
+    newVNode._original = oldVNode._original;
+    newVNode._parent._children[newVNode._index] = newVNode;
+    commitRoot(commitQueue, newVNode, refQueue);
+    oldVNode._parent = oldVNode._dom = NULL;
 
-		if (newVNode._dom != oldDom) {
-			updateParentDomPointers(newVNode);
-		}
-	}
+    if (newVNode._dom != oldDom) {
+      updateParentDomPointers(newVNode);
+    }
+  }
 }
 
 /**
  * @param {import('./internal').VNode} vnode
  */
 function updateParentDomPointers(vnode) {
-	if ((vnode = vnode._parent) != NULL && vnode._component != NULL) {
-		vnode._dom = NULL;
-		for (let i = 0; i < vnode._children.length; i++) {
-			let child = vnode._children[i];
-			if (child != NULL && child._dom != NULL) {
-				vnode._dom = child._dom;
-				break;
-			}
-		}
+  if ((vnode = vnode._parent) != NULL && vnode._component != NULL) {
+    vnode._dom = NULL;
+    for (let i = 0; i < vnode._children.length; i++) {
+      let child = vnode._children[i];
+      if (child != NULL && child._dom != NULL) {
+        vnode._dom = child._dom;
+        break;
+      }
+    }
 
-		return updateParentDomPointers(vnode);
-	}
+    return updateParentDomPointers(vnode);
+  }
 }
 
 /**
@@ -196,10 +196,10 @@ let rerenderQueue = [];
  */
 
 let prevDebounce,
-	rerenderCount = 0;
+  rerenderCount = 0;
 
 export function resetRenderCount() {
-	rerenderCount = 0;
+  rerenderCount = 0;
 }
 
 /**
@@ -207,16 +207,16 @@ export function resetRenderCount() {
  * @param {import('./internal').Component} c The component to rerender
  */
 export function enqueueRender(c) {
-	if (
-		(!(c._bits & COMPONENT_DIRTY) &&
-			(c._bits |= COMPONENT_DIRTY) &&
-			rerenderQueue.push(c) &&
-			!rerenderCount++) ||
-		prevDebounce != options.debounceRendering
-	) {
-		prevDebounce = options.debounceRendering;
-		(prevDebounce || queueMicrotask)(process);
-	}
+  if (
+    (!(c._bits & COMPONENT_DIRTY) &&
+      (c._bits |= COMPONENT_DIRTY) &&
+      rerenderQueue.push(c) &&
+      !rerenderCount++) ||
+    prevDebounce != options.debounceRendering
+  ) {
+    prevDebounce = options.debounceRendering;
+    (prevDebounce || queueMicrotask)(process);
+  }
 }
 
 /**
@@ -227,29 +227,29 @@ const depthSort = (a, b) => a._vnode._depth - b._vnode._depth;
 
 /** Flush the render queue by rerendering all queued components */
 function process() {
-	let c,
-		l = 1;
+  let c,
+    l = 1;
 
-	// Don't update `renderCount` yet. Keep its value non-zero to prevent unnecessary
-	// process() calls from getting scheduled while `queue` is still being consumed.
-	while (rerenderQueue.length) {
-		// Keep the rerender queue sorted by (depth, insertion order). The queue
-		// will initially be sorted on the first iteration only if it has more than 1 item.
-		//
-		// New items can be added to the queue e.g. when rerendering a provider, so we want to
-		// keep the order from top to bottom with those new items so we can handle them in a
-		// single pass
-		if (rerenderQueue.length > l) {
-			rerenderQueue.sort(depthSort);
-		}
+  // Don't update `renderCount` yet. Keep its value non-zero to prevent unnecessary
+  // process() calls from getting scheduled while `queue` is still being consumed.
+  while (rerenderQueue.length) {
+    // Keep the rerender queue sorted by (depth, insertion order). The queue
+    // will initially be sorted on the first iteration only if it has more than 1 item.
+    //
+    // New items can be added to the queue e.g. when rerendering a provider, so we want to
+    // keep the order from top to bottom with those new items so we can handle them in a
+    // single pass
+    if (rerenderQueue.length > l) {
+      rerenderQueue.sort(depthSort);
+    }
 
-		c = rerenderQueue.shift();
-		l = rerenderQueue.length;
+    c = rerenderQueue.shift();
+    l = rerenderQueue.length;
 
-		if (c._bits & COMPONENT_DIRTY) {
-			renderComponent(c);
-		}
-	}
+    if (c._bits & COMPONENT_DIRTY) {
+      renderComponent(c);
+    }
+  }
 
-	rerenderCount = 0;
+  rerenderCount = 0;
 }
