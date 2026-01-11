@@ -6,6 +6,10 @@ import CurrentHomework from "./homework.js";
 
 function App() {
   const [screen, setScreen] = useState("homework");
+  const [token, setToken] = useState(null);
+  const invalidateToken = () => {
+    setToken(null);
+  };
   const screens = [
     ["marks", "Оценки"],
     ["homework", "Домашние Задания"],
@@ -32,10 +36,13 @@ function App() {
       <div class="w-6 min-w-0 flex-shrink"></div>
       <main class="w-full max-w-[1000px]">
         <div class=${screen === "marks" ? "" : "hidden"}>
-          <${Marks} />
+          <${Marks} token=${token} invalidateToken=${invalidateToken} />
         </div>
         <div class=${screen === "homework" ? "" : "hidden"}>
-          <${CurrentHomework} />
+          <${CurrentHomework}
+            token=${token}
+            invalidateToken=${invalidateToken}
+          />
         </div>
       </main>
     </div>

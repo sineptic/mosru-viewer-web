@@ -2,12 +2,12 @@ import { html } from "./libs/htm";
 import { useState, useEffect } from "./libs/preact-hooks/";
 import { apiHeaders, viewTransitionHelper } from "./utils.js";
 
-function HomeworkMaterial({ hw, material }) {
+function HomeworkMaterial({ hw, material, token }) {
   const navigateToMESHLibrary = async () => {
     let res = await fetch(
       `https://school.mos.ru/api/ej/partners/v1/homeworks/launch?homework_entry_id=${hw.homework_entry_id}&material_id=${material.uuid}`,
       {
-        headers: apiHeaders,
+        headers: apiHeaders(token),
       },
     );
     // NOTE: it answers with not ok somewhy
@@ -43,7 +43,7 @@ function HomeworkMaterial({ hw, material }) {
   </button>`;
 }
 
-function HomeworkTile({ hw }) {
+function HomeworkTile({ hw, token }) {
   const transitionId = `hw-${hw.homework_id}`;
   let title = `created: ${hw.homework_created_at}`;
   if (hw.homework_created_at !== hw.homework_updated_at) {
@@ -66,7 +66,11 @@ function HomeworkTile({ hw }) {
         // .filter((material) => material.action_name === "Пройти")
         .map(
           (material) =>
-            html`<${HomeworkMaterial} hw=${hw} material=${material} />`,
+            html`<${HomeworkMaterial}
+              hw=${hw}
+              material=${material}
+              token=${token}
+            />`,
         )}
     </div>
   </div>`;
@@ -98,7 +102,9 @@ function HomeworkGroup({ items, order }) {
         <h5 style="view-transition-name: ${groupId}" class="font-bold">
           ${formattedDate}
         </h5>
-        ${byDay.map((item) => html`<${HomeworkTile} hw=${item} />`)}
+        ${byDay.map(
+          (item) => html`<${HomeworkTile} hw=${item} token=${token} />`,
+        )}
       </div>`;
     })}
   </div>`;
@@ -108,17 +114,18 @@ function formatDate(date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
-export default function CurrentHomework() {
+export default function CurrentHomework({ token, invalidateToken }) {
   let [homework, setHomework] = useState([]);
   useEffect(async () => {
     let res = await fetch(
       "https://school.mos.ru/api/family/web/v1/homeworks?from=2025-09-01&to=2026-05-30&student_id=31823383",
       {
-        headers: apiHeaders,
+        headers: apiHeaders(token),
       },
     );
     if (!res.ok) {
       console.error("can't fetch homework.", res.body);
+      invalidateToken();
       return;
     }
     let value = await res.json();
@@ -160,6 +167,7 @@ export default function CurrentHomework() {
       <${HomeworkGroup}
         items=${upcoming}
         order="desc"
+        token=${token}
       />
       <div
       style="view-transition-name: horizontal-line"
@@ -170,6 +178,7 @@ export default function CurrentHomework() {
       <${HomeworkGroup}
         items=${previous}
         order="desc"
+        token=${token}
       />
     </div>`;
 }

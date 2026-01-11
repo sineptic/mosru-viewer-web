@@ -1,6 +1,10 @@
-export const apiHeaders = new Headers();
-apiHeaders.append("Authorization", `Bearer ${MOSRU_BEARER}`);
-apiHeaders.append("x-mes-subsystem", "familyweb");
+export function apiHeaders(token) {
+  if (!token) throw new Error("token is not set");
+  let headers = new Headers();
+  headers.append("Authorization", `Bearer ${token}`);
+  headers.append("x-mes-subsystem", "familyweb");
+  return headers;
+}
 
 export function viewTransitionHelper(name, callback) {
   if (!document.startViewTransition) {

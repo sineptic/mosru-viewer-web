@@ -38,16 +38,20 @@ export function Mark({ id, value, weight, control_form_name, comment, date }) {
   `;
 }
 
-export default function Marks() {
+export default function Marks({ token, invalidateToken }) {
   let [marks, setMarks] = useState({ payload: [] });
   useEffect(async () => {
     let response = await fetch(
       "https://school.mos.ru/api/family/web/v1/subject_marks?student_id=31823383",
       {
-        headers: apiHeaders,
+        headers: apiHeaders(token),
       },
     );
-    if (!response.ok) return;
+    if (!response.ok) {
+      console.error("can't fetch marks", response.body);
+      invalidateToken();
+      return;
+    }
     let value = await response.json();
     console.log("marks: ", value);
     viewTransitionHelper("loading-marks", () => {

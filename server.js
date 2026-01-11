@@ -25,7 +25,7 @@ Bun.serve({
       let content = await Bun.file("./utils.js").text();
       const secrets = await Bun.file("./secrets.json").json();
       return new Response(
-        content.replaceAll("${MOSRU_BEARER}", secrets.MOSRU_BEARER),
+        content, // .replaceAll("MOSRU_BEARER", secrets.MOSRU_BEARER),
         {
           headers: { "Content-Type": "application/javascript" },
         },
