@@ -1,6 +1,6 @@
 import { render } from "./libs/preact/";
 import { html } from "./libs/htm";
-import { useState } from "./libs/preact-hooks/";
+import { useEffect, useState } from "./libs/preact-hooks/";
 import Marks from "./marks.js";
 import CurrentHomework from "./homework.js";
 
@@ -26,12 +26,17 @@ function GiveMeToken({ setToken }) {
 
 function App() {
   const [screen, setScreen] = useState("homework");
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("MOSRU_BEARER"));
   const invalidateToken = () => {
     setToken(null);
+    localStorage.removeItem("MOSRU_BEARER");
+  };
+  const updateToken = (tk) => {
+    setToken(tk);
+    localStorage.setItem("MOSRU_BEARER", tk);
   };
   if (token === null) {
-    return html`<${GiveMeToken} setToken=${setToken} />`;
+    return html`<${GiveMeToken} setToken=${updateToken} />`;
   }
   const screens = [
     ["marks", "Оценки"],
