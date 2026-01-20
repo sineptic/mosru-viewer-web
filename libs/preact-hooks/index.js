@@ -1,7 +1,4 @@
 import { options as _options } from "preact";
-import { COMPONENT_FORCE } from "../preact/constants.js";
-
-const ObjectIs = Object.is;
 
 /** @type {number} */
 let currentIndex;
@@ -196,7 +193,7 @@ export function useReducer(reducer, initialState, init) {
           : hookState._value[0];
         const nextValue = hookState._reducer(currentValue, action);
 
-        if (!ObjectIs(currentValue, nextValue)) {
+        if (currentValue !== nextValue) {
           hookState._nextValue = [nextValue, hookState._value[1]];
           hookState._component.setState({});
         }
@@ -214,7 +211,7 @@ export function useReducer(reducer, initialState, init) {
       // not be called. But we use that to update the hook values, so we
       // need to call it.
       currentComponent.componentWillUpdate = function (p, s, c) {
-        if (this._bits & COMPONENT_FORCE) {
+        if (this._force) {
           let tmp = prevScu;
           // Clear to avoid other sCU hooks from being called
           prevScu = undefined;
@@ -240,21 +237,28 @@ export function useReducer(reducer, initialState, init) {
       function updateHookState(p, s, c) {
         if (!hookState._component.__hooks) return true;
 
-        const hooksList = hookState._component.__hooks._list;
+        /** @type {(x: import('./internal').HookState) => x is import('./internal').ReducerHookState} */
+        const isStateHook = (x) => !!x._component;
+        const stateHooks =
+          hookState._component.__hooks._list.filter(isStateHook);
+
+        const allHooksEmpty = stateHooks.every((x) => !x._nextValue);
+        // When we have no updated hooks in the component we invoke the previous SCU or
+        // traverse the VDOM tree further.
+        if (allHooksEmpty) {
+          return prevScu ? prevScu.call(this, p, s, c) : true;
+        }
 
         // We check whether we have components with a nextValue set that
         // have values that aren't equal to one another this pushes
         // us to update further down the tree
-        let shouldUpdate =
-          hookState._component.props !== p ||
-          hooksList.every((x) => !x._nextValue);
-        hooksList.forEach((hookItem) => {
+        let shouldUpdate = hookState._component.props !== p;
+        stateHooks.forEach((hookItem) => {
           if (hookItem._nextValue) {
             const currentValue = hookItem._value[0];
             hookItem._value = hookItem._nextValue;
             hookItem._nextValue = undefined;
-            if (!ObjectIs(currentValue, hookItem._value[0]))
-              shouldUpdate = true;
+            if (currentValue !== hookItem._value[0]) shouldUpdate = true;
           }
         });
 
@@ -267,7 +271,7 @@ export function useReducer(reducer, initialState, init) {
     }
   }
 
-  return hookState._value;
+  return hookState._nextValue || hookState._value;
 }
 
 /**
@@ -536,7 +540,7 @@ function argsChanged(oldArgs, newArgs) {
   return (
     !oldArgs ||
     oldArgs.length !== newArgs.length ||
-    newArgs.some((arg, index) => !ObjectIs(arg, oldArgs[index]))
+    newArgs.some((arg, index) => arg !== oldArgs[index])
   );
 }
 
