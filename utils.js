@@ -7,12 +7,12 @@ export function apiHeaders(token) {
 }
 
 export function viewTransitionHelper(name, callback) {
-  if (!document.startViewTransition) {
-    callback();
-    return;
-  }
-  let tr = document.startViewTransition(() => {
-    callback();
-  });
-  tr.types.add(name);
+  // if (!document.startViewTransition) {
+  callback();
+  //   return;
+  // }
+  // let tr = document.startViewTransition(() => {
+  //   callback();
+  // });
+  // tr.types.add(name);
 }
