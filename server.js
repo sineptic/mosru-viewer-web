@@ -29,13 +29,7 @@ Bun.serve({
     "/libs/htm/import.js": async () => serveFile("./libs/htm/import.js"),
     "/libs/htm/index.js": async () => serveFile("./libs/htm/index.js"),
 
-    "/libs/preact-hooks/": Response.redirect(
-      "/libs/preact-hooks/index.js",
-      307,
-    ),
-    "/libs/preact-hooks/index.js": async () =>
-      serveFile("./libs/preact-hooks/index.js"),
-
+    "/libs/preact-hooks.js": async () => serveFile("./libs/preact-hooks.js"),
     "/libs/preact.js": async () => serveFile("./libs/preact.js"),
   },
 });
