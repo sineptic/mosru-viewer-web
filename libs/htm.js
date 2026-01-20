@@ -13,56 +13,6 @@ const PROPS_ASSIGN = 4;
 const PROP_SET = MODE_PROP_SET;
 const PROP_APPEND = MODE_PROP_APPEND;
 
-// Turn a result of a build(...) call into a tree that is more
-// convenient to analyze and transform (e.g. Babel plugins).
-// For example:
-// 	treeify(
-//		build`<div href="1${a}" ...${b}><${x} /></div>`,
-//		[X, Y, Z]
-//	)
-// returns:
-// 	{
-// 		tag: 'div',
-//		props: [ { href: ["1", X] }, Y ],
-// 		children: [ { tag: Z, props: [], children: [] } ]
-// 	}
-const treeify = (built, fields) => {
-  const _treeify = (built) => {
-    let tag = "";
-    let currentProps = null;
-    const props = [];
-    const children = [];
-
-    for (let i = 1; i < built.length; i++) {
-      const type = built[i++];
-      const value = built[i] ? fields[built[i++] - 1] : built[++i];
-
-      if (type === TAG_SET) {
-        tag = value;
-      } else if (type === PROPS_ASSIGN) {
-        props.push(value);
-        currentProps = null;
-      } else if (type === PROP_SET) {
-        if (!currentProps) {
-          currentProps = Object.create(null);
-          props.push(currentProps);
-        }
-        currentProps[built[++i]] = [value];
-      } else if (type === PROP_APPEND) {
-        currentProps[built[++i]].push(value);
-      } else if (type === CHILD_RECURSE) {
-        children.push(_treeify(value));
-      } else if (type === CHILD_APPEND) {
-        children.push(value);
-      }
-    }
-
-    return { tag, props, children };
-  };
-  const { children } = _treeify(built);
-  return children.length > 1 ? children : children[0];
-};
-
 const evaluate = (h, built, fields, args) => {
   let tmp;
 
@@ -250,4 +200,6 @@ const regular = function (statics) {
   return tmp.length > 1 ? tmp : tmp[0];
 };
 
-export default regular;
+import { createElement } from "preact";
+export const html = regular.bind(createElement);
+export { regular as htm };

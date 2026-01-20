@@ -25,10 +25,7 @@ Bun.serve({
     "/marks.js": async () => serveFile("./marks.js"),
     "/homework.js": async () => serveFile("./homework.js"),
 
-    "/libs/htm": Response.redirect("/libs/htm/import.js", 307),
-    "/libs/htm/import.js": async () => serveFile("./libs/htm/import.js"),
-    "/libs/htm/index.js": async () => serveFile("./libs/htm/index.js"),
-
+    "/libs/htm.js": async () => serveFile("./libs/htm.js"),
     "/libs/preact-hooks.js": async () => serveFile("./libs/preact-hooks.js"),
     "/libs/preact.js": async () => serveFile("./libs/preact.js"),
   },
