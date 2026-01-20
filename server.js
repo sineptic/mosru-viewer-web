@@ -38,26 +38,27 @@ Bun.serve({
 
     "/libs/preact/": Response.redirect("/libs/preact/index.js", 307),
     "/libs/preact/index.js": async () => serveFile("./libs/preact/index.js"),
-    "/libs/preact/render": async () => serveFile("./libs/preact/render.js"),
-    "/libs/preact/create-element": async () =>
+    "/libs/preact/render.js": async () => serveFile("./libs/preact/render.js"),
+    "/libs/preact/create-element.js": async () =>
       serveFile("./libs/preact/create-element.js"),
-    "/libs/preact/component": async () =>
+    "/libs/preact/component.js": async () =>
       serveFile("./libs/preact/component.js"),
-    "/libs/preact/clone-element": async () =>
+    "/libs/preact/clone-element.js": async () =>
       serveFile("./libs/preact/clone-element.js"),
-    "/libs/preact/diff/children": async () =>
+    "/libs/preact/diff/children.js": async () =>
       serveFile("./libs/preact/diff/children.js"),
-    "/libs/preact/create-context": async () =>
+    "/libs/preact/create-context.js": async () =>
       serveFile("./libs/preact/create-context.js"),
-    "/libs/preact/options": async () => serveFile("./libs/preact/options.js"),
-    "/libs/preact/constants": async () =>
+    "/libs/preact/options.js": async () =>
+      serveFile("./libs/preact/options.js"),
+    "/libs/preact/constants.js": async () =>
       serveFile("./libs/preact/constants.js"),
-    "/libs/preact/diff/index": async () =>
+    "/libs/preact/diff/index.js": async () =>
       serveFile("./libs/preact/diff/index.js"),
-    "/libs/preact/util": async () => serveFile("./libs/preact/util.js"),
-    "/libs/preact/diff/catch-error": async () =>
+    "/libs/preact/util.js": async () => serveFile("./libs/preact/util.js"),
+    "/libs/preact/diff/catch-error.js": async () =>
       serveFile("./libs/preact/diff/catch-error.js"),
-    "/libs/preact/diff/props": async () =>
+    "/libs/preact/diff/props.js": async () =>
       serveFile("./libs/preact/diff/props.js"),
   },
 });
