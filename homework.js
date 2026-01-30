@@ -44,19 +44,21 @@ function HomeworkTile({ hw, token }) {
   if (hw.homework_created_at !== hw.homework_updated_at) {
     title += `\nmodified: ${hw.homework_updated_at}`;
   }
-  return html`<div class="homework-tile">
-    <div class="homework-subjectname">${hw.subject_name}</div>
-    <div class="homework-text" title="${title}">
-      <p>${hw.homework}</p>
-      ${hw.materials.map((material) =>
-        html`<${HomeworkMaterial}
-          hw=${hw}
-          material=${material}
-          token=${token}
-        />`,
-      )}
+  return html`
+    <div class="homework-tile">
+        <div class="homework-subjectname">${hw.subject_name}</div>
+        <div class="homework-text" title="${title}">
+            <p>${hw.homework}</p>
+            ${hw.materials.map((material) => html`
+            <${HomeworkMaterial}
+                hw=${hw}
+                material=${material}
+                token=${token}
+            />
+            `)}
+        </div>
     </div>
-  </div>`;
+  `;
 }
 
 function HomeworkGroup({ items, order, token }) {
@@ -75,14 +77,14 @@ function HomeworkGroup({ items, order, token }) {
     ${grouped.map((byDay) => {
       const date = new Date(byDay[0].date);
       byDay.sort((a, b) => a.subject_name.localeCompare(b.subject_name));
-      return html`<div class="homework-daygroup">
-        <h5 class="homework-date">
-          ${datePretty(date)}
-        </h5>
-        ${byDay.map((item) => 
-          html`<${HomeworkTile} hw=${item} token=${token} />`,
-        )}
-      </div>`;
+      return html`
+        <div class="homework-daygroup">
+            <h5 class="homework-date">
+                ${datePretty(date)}
+            </h5>
+            ${byDay.map((item) => html`<${HomeworkTile} hw=${item} token=${token} />`)}
+        </div>
+      `;
     })}
   </div>`;
 }
@@ -120,7 +122,9 @@ export default function CurrentHomework({ token, invalidateToken }) {
     setHomework(value.payload);
   }, []);
 
-  const today = new Date();
+  let today = new Date();
+  // so homeworks for today wouldn't be filtered
+  today.setHours(0, 0, 0, 0);
 
   const [selectedSubject, setSubject] = useState("none");
   const handleSubjectChange = (e) => {
@@ -140,25 +144,18 @@ export default function CurrentHomework({ token, invalidateToken }) {
 
   return html`
     <div class="homework-filtering-bar">
-      <select value=${selectedSubject} onChange=${handleSubjectChange}>
-        <option value="none">без фильтра</option>
-        ${subjectNames.map((name) => html`<option value=${name}>${name}</option>`)}
-      </select>
+       <select value=${selectedSubject} onChange=${handleSubjectChange}>
+         <option value="none">без фильтра</option>
+         ${subjectNames.map((name) => html`<option value=${name}>${name}</option>`)}
+       </select>
     </div>
     <div>
-      <${HomeworkGroup}
-        items=${upcoming}
-        order="desc"
-        token=${token}
-      />
-      <div class="homework-now-separator">
-        <hr class="homework-now-hr"></hr>
-        СЕЙЧАС
-      </div>
-      <${HomeworkGroup}
-        items=${previous}
-        order="desc"
-        token=${token}
-      />
-    </div>`;
+        <${HomeworkGroup} items=${upcoming} order="desc" token=${token}/>
+        <div class="homework-now-separator">
+          <hr class="homework-now-hr"></hr>
+          СЕЙЧАС
+        </div>
+        <${HomeworkGroup} items=${previous} order="desc" token=${token}/>
+    </div>
+  `;
 }
