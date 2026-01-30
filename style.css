@@ -53,8 +53,6 @@ body {
     top: 0;
     left: 0;
     background-color: oklch(72.3% 0.219 149.579);
-    /* NOTE: z index needed because elements with view transition name are on top by default */
-    z-index: 10;
 }
 
 .homework-now-separator {

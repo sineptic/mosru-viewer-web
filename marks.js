@@ -1,6 +1,6 @@
 import { html } from "htm";
 import { useEffect, useState } from "preact-hooks";
-import { apiHeaders, viewTransitionHelper } from "./utils.js";
+import { apiHeaders } from "./utils.js";
 
 export function Mark({ id, value, weight, control_form_name, comment, date }) {
   return html`
@@ -54,9 +54,7 @@ export default function Marks({ token, invalidateToken }) {
     }
     let value = await response.json();
     console.log("marks: ", value);
-    viewTransitionHelper("loading-marks", () => {
-      setMarks(value);
-    });
+    setMarks(value);
   }, []);
   return html`
     <div class="flex flex-col items-center gap-3">

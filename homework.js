@@ -1,6 +1,6 @@
 import { html } from "htm";
 import { useState, useEffect } from "preact-hooks";
-import { apiHeaders, viewTransitionHelper } from "./utils.js";
+import { apiHeaders } from "./utils.js";
 
 function HomeworkMaterial({ hw, material, token }) {
   const navigateToMESHLibrary = async () => {
@@ -44,10 +44,7 @@ function HomeworkTile({ hw, token }) {
   if (hw.homework_created_at !== hw.homework_updated_at) {
     title += `\nmodified: ${hw.homework_updated_at}`;
   }
-  return html`<div
-    style="view-transition-name: ${transitionId}"
-    class="homework-tile"
-  >
+  return html`<div class="homework-tile">
     <div class="homework-subjectname">${hw.subject_name}</div>
     <div class="homework-text" title="${title}">
       <p>${hw.homework}</p>
@@ -76,10 +73,10 @@ function HomeworkGroup({ items, order, token }) {
   }
   return html`<div>
     ${grouped.map((byDay) => {
-      byDay.sort((a, b) => a.subject_name.localeCompare(b.subject_name));
       const date = new Date(byDay[0].date);
+      byDay.sort((a, b) => a.subject_name.localeCompare(b.subject_name));
       return html`<div class="homework-daygroup">
-        <h5 class="homework-date" style="view-transition-name: ${`hw-day-group-${dateId(date)}`}">
+        <h5 class="homework-date">
           ${datePretty(date)}
         </h5>
         ${byDay.map((item) => 
@@ -90,7 +87,7 @@ function HomeworkGroup({ items, order, token }) {
   </div>`;
 }
 
-function dateId(date) {
+function _dateId(date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 function datePretty(date) {
@@ -120,18 +117,14 @@ export default function CurrentHomework({ token, invalidateToken }) {
     }
     let value = await res.json();
     console.log(value);
-    viewTransitionHelper("loading-homework", () => {
-      setHomework(value.payload);
-    });
+    setHomework(value.payload);
   }, []);
 
   const today = new Date();
 
   const [selectedSubject, setSubject] = useState("none");
   const handleSubjectChange = (e) => {
-    viewTransitionHelper("filtering-homework", () => {
-      setSubject(e.target.value);
-    });
+    setSubject(e.target.value);
   };
   const filtered = homework.filter((hw) => {
     if (selectedSubject === "none") return true;
@@ -147,7 +140,7 @@ export default function CurrentHomework({ token, invalidateToken }) {
 
   return html`
     <div class="homework-filtering-bar">
-      <select id="homework-filtering-select" value=${selectedSubject} onChange=${handleSubjectChange}>
+      <select value=${selectedSubject} onChange=${handleSubjectChange}>
         <option value="none">без фильтра</option>
         ${subjectNames.map((name) => html`<option value=${name}>${name}</option>`)}
       </select>
@@ -158,7 +151,7 @@ export default function CurrentHomework({ token, invalidateToken }) {
         order="desc"
         token=${token}
       />
-      <div class="homework-now-separator" style="view-transition-name: horizontal-line">
+      <div class="homework-now-separator">
         <hr class="homework-now-hr"></hr>
         СЕЙЧАС
       </div>

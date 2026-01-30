@@ -5,14 +5,3 @@ export function apiHeaders(token) {
   headers.append("x-mes-subsystem", "familyweb");
   return headers;
 }
-
-export function viewTransitionHelper(name, callback) {
-  if (!document.startViewTransition) {
-    callback();
-    return;
-  }
-  let tr = document.startViewTransition(() => {
-    callback();
-  });
-  tr.types.add(name);
-}
