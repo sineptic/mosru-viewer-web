@@ -7,6 +7,9 @@ async function serveFile(path) {
     case "html":
       content_type = "text/html";
       break;
+    case "css":
+        content_type="text/css";
+        break;
     default:
       throw `unknown type ${type}`;
   }
@@ -21,6 +24,7 @@ Bun.serve({
   routes: {
     "/": async () => serveFile("index.html"),
     "/index.js": async () => serveFile("./index.js"),
+    "/style.css": async () => serveFile("./style.css"),
     "/utils.js": async () => serveFile("./utils.js"),
     "/marks.js": async () => serveFile("./marks.js"),
     "/homework.js": async () => serveFile("./homework.js"),

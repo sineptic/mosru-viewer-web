@@ -11,10 +11,6 @@ function HomeworkMaterial({ hw, material, token }) {
       },
     );
     // NOTE: it answers with not ok somewhy
-    // if (!res.ok) {
-    //   console.error("failed getting material url");
-    //   return;
-    // }
     let url = await res.text();
     console.info(`opening ${url}`);
     window.open(url, "_blank", "noopener,noreferrer");
@@ -35,12 +31,11 @@ function HomeworkMaterial({ hw, material, token }) {
       await navigateToMESHLibrary();
     }
   };
-  return html`<button
-    class="bg-blue-200 my-1 p-1 rounded-md hover:bg-blue-300"
-    onClick=${handleClick}
-  >
-    ${material.action_name}: ${material.title}
-  </button>`;
+  return html`
+    <button class="button-resource-homeworkmaterial" onClick=${handleClick}>
+        ${material.action_name}: ${material.title}
+    </button>
+  `;
 }
 
 function HomeworkTile({ hw, token }) {
@@ -51,27 +46,18 @@ function HomeworkTile({ hw, token }) {
   }
   return html`<div
     style="view-transition-name: ${transitionId}"
-    class="bg-white px-4 py-3 rounded-2xl flex flex-row"
+    class="homework-tile"
   >
-    <div class="mt-3 font-semibold w-[180px]">${hw.subject_name}</div>
-    <div
-      class="bg-transparent w-4 min-w-0 flex-shrink transition-all duration-200"
-    ></div>
-    <div
-      class="hover:bg-[rgb(244,244,248)] rounded-2xl pl-3 pr-2 py-4 w-full flex flex-col items-start"
-      title="${title}"
-    >
-      <div>${hw.homework}</div>
-      ${hw.materials
-        // .filter((material) => material.action_name === "Пройти")
-        .map(
-          (material) =>
-            html`<${HomeworkMaterial}
-              hw=${hw}
-              material=${material}
-              token=${token}
-            />`,
-        )}
+    <div class="homework-subjectname">${hw.subject_name}</div>
+    <div class="homework-text" title="${title}">
+      <p>${hw.homework}</p>
+      ${hw.materials.map((material) =>
+        html`<${HomeworkMaterial}
+          hw=${hw}
+          material=${material}
+          token=${token}
+        />`,
+      )}
     </div>
   </div>`;
 }
@@ -90,6 +76,7 @@ function HomeworkGroup({ items, order, token }) {
   }
   return html`<div class="flex flex-col gap-6">
     ${grouped.map((byDay) => {
+      byDay.sort((a, b) => a.subject_name.localeCompare(b.subject_name));
       let formattedDate = new Date(byDay[0].date).toLocaleDateString("ru-RU", {
         weekday: "long",
         day: "numeric",
