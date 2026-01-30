@@ -74,31 +74,34 @@ function HomeworkGroup({ items, order, token }) {
     default:
       throw `order must be 'asc' or 'desc', but it is ${order}`;
   }
-  return html`<div class="flex flex-col gap-6">
+  return html`<div>
     ${grouped.map((byDay) => {
       byDay.sort((a, b) => a.subject_name.localeCompare(b.subject_name));
-      let formattedDate = new Date(byDay[0].date).toLocaleDateString("ru-RU", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-      });
-      formattedDate =
-        formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-      let groupId = `hw-day-group-${formatDate(new Date(byDay[0].date))}`;
-      return html`<div class="flex flex-col gap-4">
-        <h5 style="view-transition-name: ${groupId}" class="font-bold">
-          ${formattedDate}
+      const date = new Date(byDay[0].date);
+      return html`<div class="homework-daygroup">
+        <h5 class="homework-date" style="view-transition-name: ${`hw-day-group-${dateId(date)}`}">
+          ${datePretty(date)}
         </h5>
-        ${byDay.map(
-          (item) => html`<${HomeworkTile} hw=${item} token=${token} />`,
+        ${byDay.map((item) => 
+          html`<${HomeworkTile} hw=${item} token=${token} />`,
         )}
       </div>`;
     })}
   </div>`;
 }
 
-function formatDate(date) {
+function dateId(date) {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}
+function datePretty(date) {
+  let formattedDate = date.toLocaleDateString("ru-RU", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+  formattedDate =
+    formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  return formattedDate;
 }
 
 export default function CurrentHomework({ token, invalidateToken }) {
@@ -142,13 +145,12 @@ export default function CurrentHomework({ token, invalidateToken }) {
     new Set(homework.map((hw) => hw.subject_name)),
   ).toSorted();
 
-  // NOTE: z index needed because elements with view transition name are on top by default
   return html`
-    <div style="view-transition-name: filtering-topbar" class="sticky top-0 left-0 bg-green-500 z-10">
-    <select id="homework-filtering-select" value=${selectedSubject} onChange=${handleSubjectChange}>
-      <option value="none">без фильтра</option>
-      ${subjectNames.map((name) => html`<option value=${name}>${name}</option>`)}
-    </select>
+    <div class="homework-filtering-bar">
+      <select id="homework-filtering-select" value=${selectedSubject} onChange=${handleSubjectChange}>
+        <option value="none">без фильтра</option>
+        ${subjectNames.map((name) => html`<option value=${name}>${name}</option>`)}
+      </select>
     </div>
     <div>
       <${HomeworkGroup}
@@ -156,10 +158,8 @@ export default function CurrentHomework({ token, invalidateToken }) {
         order="desc"
         token=${token}
       />
-      <div
-      style="view-transition-name: horizontal-line"
-      class="my-6 flex flex-col gap-0.5 items-center font-mono text-red-600 w-full">
-        <hr class="border-red-500 w-full border-1"></hr>
+      <div class="homework-now-separator" style="view-transition-name: horizontal-line">
+        <hr class="homework-now-hr"></hr>
         СЕЙЧАС
       </div>
       <${HomeworkGroup}

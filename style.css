@@ -11,14 +11,12 @@ body {
     flex-direction: row;
     gap: 1rem;
 }
-
 .homework-subjectname {
     margin: 0.5rem;
     margin-left: 1rem;
     width: 180px;
     font-weight: 600;
 }
-
 .homework-text {
     padding: 0.75rem;
     padding-inline: 1rem;
@@ -31,7 +29,6 @@ body {
         background-color: rgb(244,244,248);
     }
 }
-
 .button-resource-homeworkmaterial {
     padding: 0.25rem;
     margin-block: 0.25rem;
@@ -42,3 +39,36 @@ body {
     }
 }
 
+.homework-daygroup {
+    display: grid;
+    gap: 0.75rem;
+    margin-block: 1rem;
+}
+.homework-date {
+    font-weight: 700;
+}
+
+.homework-filtering-bar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: oklch(72.3% 0.219 149.579);
+    /* NOTE: z index needed because elements with view transition name are on top by default */
+    z-index: 10;
+}
+
+.homework-now-separator {
+    margin-block: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    color: oklch(57.7% 0.245 27.325);
+    align-items: center;
+    width: 100%;
+    font-family: monospace;
+}
+.homework-now-hr {
+    width: 100%;
+    border-width: 1px;
+    border-color: oklch(63.7% 0.237 25.331);
+}
