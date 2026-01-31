@@ -12,18 +12,21 @@ body {
     border-radius: 1rem;
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    flex-wrap: wrap;
 }
 .homework-subjectname {
+    flex: 0 0 180px;
     margin: 0.5rem;
     margin-left: 1rem;
     width: 180px;
+    height: fit-content;
     font-weight: 600;
 }
 .homework-text {
+    flex: 1 0 60%;
+    min-width: 0;
     padding: 0.75rem;
     padding-inline: 1rem;
-    width: 100%;
     border-radius: 1rem;
     display: flex;
     flex-direction: column;

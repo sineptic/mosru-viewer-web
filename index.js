@@ -25,7 +25,7 @@ function GiveMeToken({ setToken }) {
 }
 
 function App() {
-  const [screen, setScreen] = useState("marks");
+  const [screen, setScreen] = useState("homework");
   const [token, setToken] = useState(localStorage.getItem("MOSRU_BEARER"));
   const invalidateToken = () => {
     setToken(null);
@@ -42,8 +42,9 @@ function App() {
     ["marks", "Оценки"],
     ["homework", "Домашние Задания"],
   ];
-  return html`<div class="w-full h-full p-1">
-    <div class="flex flex-row justify-center">
+  return html`<div class="w-full h-full py-1">
+    <div class="flex flex-row items-start">
+      <div class="w-1 min-w-0 flex-shrink"></div>
       <div class="flex flex-col gap-1">
         ${screens.map(
           (scr) => html`
@@ -61,8 +62,8 @@ function App() {
           `,
         )}
       </div>
-      <div class="w-6 min-w-0 flex-shrink"></div>
-      <main class="w-full max-w-[1000px]">
+      <div class="w-2 min-w-0 flex-shrink"></div>
+      <div class="w-full max-w-[1000px]">
         <div class=${screen === "marks" ? "" : "hidden"}>
           <${Marks} token=${token} invalidateToken=${invalidateToken} />
         </div>
@@ -72,7 +73,8 @@ function App() {
             invalidateToken=${invalidateToken}
           />
         </div>
-      </main>
+      </div>
+      <div class="w-1 min-w-0 flex-shrink"></div>
     </div>
   </div>`;
 }
