@@ -106,6 +106,8 @@ function datePretty(date) {
 export default function CurrentHomework({ token, invalidateToken }) {
   let [homework, setHomework] = useState([]);
   useEffect(async () => {
+    // TODO: split this query into 2: all after today(including) and all before today.
+    // after today is more important and smaller
     let res = await fetch(
       "https://school.mos.ru/api/family/web/v1/homeworks?from=2025-09-01&to=2026-05-30&student_id=31823383",
       {

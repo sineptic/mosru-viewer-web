@@ -25,7 +25,7 @@ function GiveMeToken({ setToken }) {
 }
 
 function App() {
-  const [screen, setScreen] = useState("homework");
+  const [screen, setScreen] = useState("marks");
   const [token, setToken] = useState(localStorage.getItem("MOSRU_BEARER"));
   const invalidateToken = () => {
     setToken(null);
