@@ -42,10 +42,10 @@ function App() {
     ["marks", "Оценки"],
     ["homework", "Домашние Задания"],
   ];
-  return html`<div class="w-full h-full py-1">
+  return html`<div class="w-full h-full">
     <div class="flex flex-row items-start">
       <div class="w-1 min-w-0 flex-shrink"></div>
-      <div class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1 sticky top-0 left-0">
         ${screens.map(
           (scr) => html`
             <a
