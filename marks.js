@@ -44,14 +44,14 @@ function SubjectMarks({subject_name, average_by_all, year_mark, periods}) {
             ${subject_name}
             <${PeriodMark} average=${average_by_all} final=${year_mark}/>
         </div>
-        ${periods.reverse().map((period) => html`
+        ${periods.map((period) => html`
             <div class="marks-section">
                 <${PeriodMark} average=${period.value} final=${period.fixed_value} />
                 <div class="marks-section-marks">
                     ${period.marks.map((mark) => html`<${Mark} ...${mark} />`)}
                 </div>
             </div>
-        `)}
+        `).toReversed()}
     </div>
   `;
 }

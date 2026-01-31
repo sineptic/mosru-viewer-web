@@ -120,8 +120,9 @@ export default function CurrentHomework({ token, invalidateToken }) {
       return;
     }
     let value = await res.json();
-    console.log(value);
-    setHomework(value.payload);
+    value = value.payload;
+    console.log("homework: ", value);
+    setHomework(value);
   }, []);
 
   let today = new Date();

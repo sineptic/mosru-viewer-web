@@ -63,7 +63,7 @@ function App() {
         )}
       </div>
       <div class="w-2 min-w-0 flex-shrink"></div>
-      <div class="w-full max-w-[1000px]">
+      <div class="w-full max-w-[1000px] mx-auto">
         <div class=${screen === "marks" ? "" : "hidden"}>
           <${Marks} token=${token} invalidateToken=${invalidateToken} />
         </div>

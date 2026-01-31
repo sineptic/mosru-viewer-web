@@ -15,10 +15,9 @@ body {
     flex-wrap: wrap;
 }
 .homework-subjectname {
-    flex: 0 0 180px;
+    flex: 0 0 11.25rem;
     margin: 0.5rem;
     margin-left: 1rem;
-    width: 180px;
     height: fit-content;
     font-weight: 600;
 }
