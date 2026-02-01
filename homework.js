@@ -90,7 +90,7 @@ function HomeworkGroup({ items, order, token }) {
 }
 
 function _dateId(date) {
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 function datePretty(date) {
   let formattedDate = date.toLocaleDateString("ru-RU", {
@@ -106,13 +106,9 @@ function datePretty(date) {
 export default function CurrentHomework({ token, invalidateToken }) {
   let [homework, setHomework] = useState([]);
   useEffect(async () => {
-    // TODO: split this query into 2: all after today(including) and all before today.
-    // after today is more important and smaller
     let res = await fetch(
       "https://school.mos.ru/api/family/web/v1/homeworks?from=2025-09-01&to=2026-05-30&student_id=31823383",
-      {
-        headers: apiHeaders(token),
-      },
+      { headers: apiHeaders(token) },
     );
     if (!res.ok) {
       console.error("can't fetch homework.", res.body);
@@ -125,10 +121,6 @@ export default function CurrentHomework({ token, invalidateToken }) {
     setHomework(value);
   }, []);
 
-  let today = new Date();
-  // so homeworks for today wouldn't be filtered
-  today.setHours(0, 0, 0, 0);
-
   const [selectedSubject, setSubject] = useState("none");
   const handleSubjectChange = (e) => {
     setSubject(e.target.value);
@@ -137,6 +129,10 @@ export default function CurrentHomework({ token, invalidateToken }) {
     if (selectedSubject === "none") return true;
     return hw.subject_name === selectedSubject;
   });
+
+  let today = new Date();
+  // so homeworks for today wouldn't be filtered
+  today.setHours(0, 0, 0, 0);
 
   const upcoming = filtered.filter((hw) => new Date(hw.date) >= today);
   const previous = filtered.filter((hw) => new Date(hw.date) < today);
