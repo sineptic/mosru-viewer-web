@@ -161,8 +161,11 @@ body {
     border-color: #e8e8ef;
     border-style: dashed;
     border-width: 1px;
-    border-radius: 1.5rem;
-    corner-shape: squircle;
+    border-radius: 0.75rem;
+    @supports (corner-shape: squircle) {
+        border-radius: 1.5rem;
+        corner-shape: squircle;
+    }
 
     display: flex;
     flex-direction: row;
