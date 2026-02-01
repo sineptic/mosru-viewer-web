@@ -4,6 +4,28 @@ body {
 .hidden {
     display: none;
 }
+.divider-1 {
+    width: 0.25rem;
+    min-width: 0;
+    flex-shrink: 1
+}
+.divider-2 {
+    width: 0.5rem;
+    min-width: 0;
+    flex-shrink: 1
+}
+
+
+
+.main-screen-outer {
+    display: flex;
+    flex-direction: row;
+}
+.main-screen-inner {
+    width: 100%;
+    max-width: 62.5rem;
+    margin-inline: auto;
+}
 
 
 .homework-tile {
@@ -201,5 +223,28 @@ body {
     border-color: oklch(62.7% 0.194 149.214);
     &:hover {
         border-color: oklch(52.7% 0.154 150.069);
+    }
+}
+
+
+.screen-selection-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+.screen-link-tile {
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    user-select: none;
+    cursor: pointer;
+    &:hover {
+        background-color: #e8e8ef;
+    }
+    &.active {
+        background-color: #e8e8ef;
+        font-weight: 600;
     }
 }

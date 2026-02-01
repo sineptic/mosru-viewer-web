@@ -23,8 +23,28 @@ function GiveMeToken({ setToken }) {
   `;
 }
 
+function Sidebar({screens, currentScreen, setScreen}) {
+  return html`
+    <div class="screen-selection-bar">
+      ${screens.map(
+        (scr) => { 
+        const onClick = () => setScreen(scr[0]);
+        let classes = "screen-link-tile";
+        if (scr[0]===currentScreen) {
+            classes += " active";
+        }
+        return html`
+          <a onClick=${onClick} class=${classes}>
+            ${scr[1]}
+          </a>
+        `;}
+      )}
+    </div>
+  `;
+}
+
 function App() {
-  const [screen, setScreen] = useState("homework");
+  const [currentScreen, setScreen] = useState("homework");
   const [token, setToken] = useState(localStorage.getItem("MOSRU_BEARER"));
   const invalidateToken = () => {
     setToken(null);
@@ -41,41 +61,22 @@ function App() {
     ["marks", "Оценки"],
     ["homework", "Домашние Задания"],
   ];
-  return html`<div class="w-full h-full">
-    <div class="flex flex-row items-start">
-      <div class="w-1 min-w-0 flex-shrink"></div>
-      <div class="flex flex-col gap-1 sticky top-0 left-0">
-        ${screens.map(
-          (scr) => html`
-            <a
-              class="hover:bg-[#e8e8ef] p-3 rounded-xl cursor-pointer select-none ${scr[0] ===
-              screen
-                ? "bg-[#e8e8ef] font-semibold"
-                : ""}"
-              onClick=${() => {
-                setScreen(scr[0]);
-              }}
-            >
-              ${scr[1]}
-            </a>
-          `,
-        )}
-      </div>
-      <div class="w-2 min-w-0 flex-shrink"></div>
-      <div class="w-full max-w-[1000px] mx-auto">
-        <div class=${screen === "marks" ? "" : "hidden"}>
-          <${Marks} token=${token} invalidateToken=${invalidateToken} />
+  return html`
+    <div class="main-screen-outer">
+        <div class="divider-1"></div>
+        <${Sidebar} screens=${screens} currentScreen=${currentScreen} setScreen=${setScreen} />
+        <div class="divider-2"></div>
+        <div class="main-screen-inner">
+            <div class=${currentScreen !== "marks" ? "hidden" : undefined}>
+                <${Marks} token=${token} invalidateToken=${invalidateToken} />
+            </div>
+            <div class=${currentScreen !== "homework" ? "hidden" : undefined}>
+                <${CurrentHomework} token=${token} invalidateToken=${invalidateToken}/>
+            </div>
         </div>
-        <div class=${screen === "homework" ? "" : "hidden"}>
-          <${CurrentHomework}
-            token=${token}
-            invalidateToken=${invalidateToken}
-          />
-        </div>
-      </div>
-      <div class="w-1 min-w-0 flex-shrink"></div>
+        <div class="divider-1"></div>
     </div>
-  </div>`;
+  `;
 }
 
 render(html`<${App} />`, document.body);

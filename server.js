@@ -24,10 +24,12 @@ Bun.serve({
   routes: {
     "/": async () => serveFile("index.html"),
     "/index.js": async () => serveFile("./index.js"),
-    "/style.css": async () => serveFile("./style.css"),
     "/utils.js": async () => serveFile("./utils.js"),
     "/marks.js": async () => serveFile("./marks.js"),
     "/homework.js": async () => serveFile("./homework.js"),
+
+    "/style.css": async () => serveFile("./style.css"),
+    "/tailwind-default.css": async () => serveFile("./tailwind-default.css"),
 
     "/libs/htm.js": async () => serveFile("./libs/htm.js"),
     "/libs/preact-hooks.js": async () => serveFile("./libs/preact-hooks.js"),

@@ -12,9 +12,10 @@ jobs:
       - name: move files
         run: mkdir _site 
           && cp -r libs _site/libs 
+          && cp style.css _site 
+          && cp tailwind-default.css _site 
           && cp homework.js _site 
           && cp index.html _site 
-          && cp style.css _site 
           && cp index.js _site 
           && cp marks.js _site 
           && cp utils.js _site 
