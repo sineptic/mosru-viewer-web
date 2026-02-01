@@ -7,19 +7,18 @@ import CurrentHomework from "./homework.js";
 function GiveMeToken({ setToken }) {
   const [tmpToken, setTmpToken] = useState("");
   const handleChange = (event) => {
-    console.log("hi");
     setTmpToken(event.target.value);
     event.preventDefault();
   };
   return html`
-    <div class="flex flex-col items-start">
-      <p>set token pls</p>
-      <input type="text" value=${tmpToken} onInput=${handleChange} class="border-2 rounded-sm p-1"></input>
-      <button class="border-green-600 bg-green-500 hover:border-green-700 border-2 rounded-sm p-1 m-1 overflow-hidden" onClick=${() => {
-        if (tmpToken) {
-          setToken(tmpToken);
-        }
-      }}>I finish!</button>
+    <div class="give-me-token-outer">
+        <div>
+            <p>Mosru BEARER token</p>
+            <input id="mosru-token" type="text" value=${tmpToken} onInput=${handleChange} class="give-me-token-input"></input>
+            <button class="give-me-token-button" onClick=${() => tmpToken && setToken(tmpToken)}>
+                Set!
+            </button>
+        </div>
     </div>
   `;
 }

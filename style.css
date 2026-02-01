@@ -181,4 +181,25 @@ body {
 }
 
 
-
+.give-me-token-outer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.give-me-token-input {
+    padding: 0.25rem;
+    border-width: 2px;
+    border-radius: 0.25rem;
+}
+.give-me-token-button {
+    margin: 0.25rem;
+    padding: 0.25rem;
+    border-width: 2px;
+    border-radius: 0.25rem;
+    background-color: oklch(72.3% 0.219 149.579);
+    border-color: oklch(62.7% 0.194 149.214);
+    &:hover {
+        border-color: oklch(52.7% 0.154 150.069);
+    }
+}
